@@ -63,22 +63,44 @@
     </div>
 
     <script>
-        // 設定設定檔
-        const totalImages = 10; // 這裡請修改為您實際的照片總數
-        const displayTime = 3000; // 切換時間（3000 = 3秒）
-        
-        let currentIndex = 1;
-        const imgElement = document.getElementById('slideshow');
+        // 1. 設定您的 GitHub 儲存庫資訊
+        const githubUser = 'foredu987-lang'; // GitHub 帳號
+        const githubRepo = '2026SW';         // 儲存庫名稱
+        const folderPath = 'photos';         // 圖片資料夾名稱
+        const displayTime = 3000;            // 切換時間 (3000 = 3秒)
 
-        // 自動輪播功能
-        setInterval(() => {
-            currentIndex++;
-            if (currentIndex > totalImages) {
-                currentIndex = 1; // 播完最後一組回到第一組
-            }
-            // 替換圖片來源路徑
-            imgElement.src = `photos/${currentIndex}.jpg`;
-        }, displayTime); 
+        const apiUrl = `https://api.github.com/repos/${githubUser}/${githubRepo}/contents/${folderPath}`;
+        const imgElement = document.getElementById('slideshow');
+        
+        let imageList = [];
+        let currentIndex = 0;
+
+        // 2. 透過 GitHub API 自動取得資料夾內的檔案清單
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                // 過濾出圖片檔 (排除非圖片檔案)，並建立清單
+                imageList = data
+                    .filter(item => item.name.match(/\.(jpg|jpeg|png|gif)$/i))
+                    .map(item => item.name);
+
+                if (imageList.length > 0) {
+                    // 載入第一張圖片
+                    imgElement.src = `photos/${imageList[currentIndex]}`;
+                    
+                    // 3. 啟動自動輪播
+                    setInterval(() => {
+                        currentIndex++;
+                        if (currentIndex >= imageList.length) {
+                            currentIndex = 0;
+                        }
+                        imgElement.src = `photos/${imageList[currentIndex]}`;
+                    }, displayTime);
+                } else {
+                    console.error("資料夾內找不到圖片檔案");
+                }
+            })
+            .catch(error => console.error("無法取得資料夾內容:", error));
     </script>
 
 </body>
