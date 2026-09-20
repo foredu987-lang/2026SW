@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會考會不會考會 - 暑假作業展</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0; 
+        }
+
+        /* 主視覺容器：設定背景圖 */
+        .container {
+            position: relative;
+            width: 1920px; /* 請依據您 Canva 下載的實際像素調整 */
+            height: 1080px; 
+            background-image: url('background.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            max-width: 100vw;
+            max-height: 100vh;
+        }
+
+        /* 圖片播放框：使用絕對定位覆蓋在背景圖的指定位置 */
+        .photo-frame {
+            position: absolute;
+            /* ⚠️ 這裡的 top, left, width, height 需要根據您的灰色八角形邊框位置進行數值微調 */
+            top: 26%;   
+            left: 50%;
+            transform: translateX(-50%); /* 確保水平置中 */
+            width: 32%;  
+            height: 60%; 
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+        }
+
+        /* 照片本身的樣式 */
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* contain: 完整顯示不裁切；若要填滿框框可改為 cover */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 輪播圖片的顯示區塊 -->
+        <div class="photo-frame">
+            <img id="slideshow" src="photos/1.jpg" alt="暑假作業展示">
+        </div>
+    </div>
+
+    <script>
+        // 設定設定檔
+        const totalImages = 10; // 這裡請修改為您實際的照片總數
+        const displayTime = 3000; // 切換時間（3000 = 3秒）
+        
+        let currentIndex = 1;
+        const imgElement = document.getElementById('slideshow');
+
+        // 自動輪播功能
+        setInterval(() => {
+            currentIndex++;
+            if (currentIndex > totalImages) {
+                currentIndex = 1; // 播完最後一組回到第一組
+            }
+            // 替換圖片來源路徑
+            imgElement.src = `photos/${currentIndex}.jpg`;
+        }, displayTime); 
+    </script>
+
+</body>
+</html>
